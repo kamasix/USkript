@@ -1,0 +1,15 @@
+# USkript Translations
+# https://github.com/yourrepo/uskript
+
+plugin_events:
+  plugin_start: "USkript Engine loaded!"
+  plugin_stop: "USkript Engine stopped"
+  scripts_reloaded: "Scripts reloaded: {ScriptCount} file(s), {EventCount} event(s)"
+  
+commands:
+  reload:
+    success: "USkript reloaded successfully!"
+    error: "Error during reload: {Error}"
+  info:
+    no_scripts: "No scripts loaded"
+    header: "=== USkript Information ==="

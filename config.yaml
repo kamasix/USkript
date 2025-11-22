@@ -1,0 +1,11 @@
+# USkript Configuration
+# https://github.com/yourrepo/uskript
+
+# Scripts folder (relative to plugin folder)
+scriptsFolder: "scripts"
+
+# Debug mode - more logging
+debugMode: false
+
+# Auto-reload scripts on file changes (requires file watcher)
+autoReload: false
