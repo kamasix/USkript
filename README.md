@@ -22,7 +22,7 @@
 
 ### Installation Steps
 
-1. Download the latest USkript release from [Releases](https://github.com/yourrepo/uskript/releases)
+1. Download the latest USkript release from [Releases](https://github.com/kamasix/USkript/releases)
 2. Copy `USkript.dll` to the `OpenMod/Plugins/` folder
 3. Start the server - the plugin will automatically create the `scripts/` folder
 4. Done!
@@ -303,9 +303,8 @@ Project distributed under the MIT License. See the `LICENSE` file for details.
 
 ## 💬 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourrepo/uskript/issues)
-- **Discord**: [Discord Link]
-- **Documentation**: [Wiki](https://github.com/yourrepo/uskript/wiki)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/kamasix/USkript/issues)
+- **Discord**: [Join our community](https://discord.gg/7crjRskdyj)
 
 ## 🙏 Acknowledgments
 

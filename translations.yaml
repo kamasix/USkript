@@ -1,5 +1,5 @@
 # USkript Translations
-# https://github.com/yourrepo/uskript
+# https://github.com/kamasix/USkript
 
 plugin_events:
   plugin_start: "USkript Engine loaded!"

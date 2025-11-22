@@ -16,7 +16,7 @@ using OpenMod.Unturned.Players.Chat.Events;
 using USkript.Core.Runtime;
 using USkript.OpenMod;
 
-[assembly: PluginMetadata("USkript", DisplayName = "USkript", Author = "USkript", Website = "https://github.com/yourrepo/uskript")]
+[assembly: PluginMetadata("USkript", DisplayName = "USkript", Author = "kamasix", Website = "https://github.com/kamasix/USkript")]
 
 namespace USkript
 {

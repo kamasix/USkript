@@ -1,5 +1,5 @@
 # USkript Configuration
-# https://github.com/yourrepo/uskript
+# https://github.com/kamasix/USkript
 
 # Scripts folder (relative to plugin folder)
 scriptsFolder: "scripts"
