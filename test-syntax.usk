@@ -1,0 +1,42 @@
+# Test USkript Syntax Highlighting
+
+# Player join event
+event player_join(player):
+    message player "&e=== Welcome &a{player.name} &e==="
+    broadcast "&7[&a+&7] &f{player.displayname} &7joined!"
+    add_money player 100
+    give player "MilitaryKnife" 1
+
+# Player chat commands
+event player_chat(player, msg):
+    # Help command
+    if equals msg "!help":
+        message player "&aAvailable commands:"
+        message player "&e/kit &7- Get starter kit"
+        cancel
+    
+    # Kit command with permission check
+    if startswith msg "!kit":
+        if has_permission player "vip.kit":
+            give player "Grizzly" 1
+            message player "&aYou received VIP kit!"
+        else:
+            message player "&cNo VIP permission!"
+        cancel
+    
+    # Balance check
+    if money player >= 1000:
+        message player "&eYou have &a${player.money}"
+    
+    # Health check
+    if health player <= 30:
+        message player "&cLow health! Use !heal"
+
+# Timed event
+event every(5 minutes):
+    broadcast "&e[Tip] Use !help for commands!"
+
+# Death event
+event player_death(player):
+    message player "&cYou died!"
+    set_health player 50
