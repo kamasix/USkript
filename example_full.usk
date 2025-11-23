@@ -1,0 +1,234 @@
+# example_full.usk - Complete example of all USkript MVP features
+# This file demonstrates all available events, actions and conditions
+
+# ============================================
+# EVENTS - Player Join
+# ============================================
+
+event player_join(player):
+    # Messages with colors
+    message player "&e=== Welcome to the server! ==="
+    message player "&fYour name: &a{player.name}"
+    message player "&fYour ID: &7{player.id}"
+    
+    # Broadcast
+    broadcast "&7[&a+&7] &f{player.displayname} &7joined the game!"
+    
+    # Economy - add money on join
+    add_money player 100
+    
+    # Welcome item
+    give player "MilitaryKnife" 1
+
+
+# ============================================
+# EVENTS - Player Quit
+# ============================================
+
+event player_quit(player):
+    broadcast "&7[&c-&7] &f{player.name} &7left the server"
+
+
+# ============================================
+# EVENTS - Player Death
+# ============================================
+
+event player_death(player):
+    message player "&cYou died! Respawn in 10 seconds"
+    broadcast "&e{player.name} &fdied in combat!"
+
+
+# ============================================
+# EVENTS - Player Chat (Command System)
+# ============================================
+
+event player_chat(player, msg):
+    
+    # === BASIC COMMANDS ===
+    
+    # !help - Command list
+    if equals msg "!help":
+        message player "&e=== Available commands ==="
+        message player "&a!heal &7- Restore health ($100)"
+        message player "&a!kit &7- Starter kit (VIP)"
+        message player "&a!spawn &7- Teleport to spawn"
+        message player "&a!bal &7- Check account balance"
+        cancel
+    
+    # !heal - Buying health
+    if equals msg "!heal":
+        if money player >= 100:
+            set_health player 100
+            add_money player -100
+            message player "&aHealth restored! (-$100)"
+        else:
+            message player "&cNot enough money! (need $100)"
+        cancel
+    
+    # !spawn - Teleportation
+    if equals msg "!spawn":
+        teleport player "0,10,0"
+        message player "&aTeleported to spawn!"
+        cancel
+    
+    # !bal - Check balance
+    if startswith msg "!bal":
+        message player "&eYour balance: &a$1000"
+        cancel
+    
+    # === VIP COMMANDS ===
+    
+    # !kit - VIP kit
+    if startswith msg "!kit":
+        if has_permission player "vip.kit":
+            give player "Grizzly" 1
+            give player "GrizzlyMagazine" 5
+            give player "Medkit" 3
+            give player "Adrenaline" 2
+            message player "&eYou received VIP kit!"
+            broadcast "&e{player.name} &freceived VIP kit!"
+        else:
+            message player "&cYou don't have VIP permissions!"
+            message player "&7Buy VIP at &ewww.example.com/vip"
+        cancel
+    
+    # === ADMIN COMMANDS ===
+    
+    # !killall - Kill all (admin only)
+    if equals msg "!killall":
+        if has_permission player "admin.kill":
+            run_command "killall"
+            broadcast "&c[ADMIN] &fAll players have been killed!"
+        else:
+            message player "&cNo administrator permissions!"
+        cancel
+    
+    # === ADVANCED CONDITIONS ===
+    
+    # Health check
+    if health player <= 30:
+        if startswith msg "!help":
+            message player "&cWarning! Low health! Use !heal"
+    
+    # Money check
+    if money player >= 1000:
+        if equals msg "!status":
+            message player "&aYou are &erich&a! You have ${player.money}"
+            cancel
+    
+    # === SPAM BLOCKING ===
+    
+    # Block messages starting with "@"
+    if startswith msg "@":
+        message player "&cPrivate messages are disabled!"
+        cancel
+    
+    # Block profanity (example)
+    if startswith msg "badword":
+        message player "&cDon't use profanity!"
+        broadcast "&7{player.name} &ftried to use prohibited word"
+        cancel
+
+
+# ============================================
+# EVENTS - Timers (Periodic)
+# ============================================
+
+# Every 5 minutes - Tip
+event every(5 minutes):
+    broadcast "&e[Tip] &fUse &a!help &fto see available commands!"
+
+# Every 10 minutes - Discord info
+event every(10 minutes):
+    broadcast "&e[Discord] &fJoin us: &bhttps://discord.gg/7crjRskdyj"
+
+# Every 15 minutes - Save reminder
+event every(15 minutes):
+    broadcast "&e[Info] &fRemember to save your progress regularly!"
+
+# Every 30 minutes - Airdrop event
+event every(30 minutes):
+    broadcast "&c[EVENT] &fAirdrop in 1 minute!"
+    run_command "airdrop"
+
+# Every hour - Restart warning
+event every(1 hour):
+    broadcast "&c[WARNING] &fServer restart in 1 hour!"
+
+
+# ============================================
+# ADVANCED EXAMPLES
+# ============================================
+
+# Combining multiple conditions
+event player_chat(player, msg):
+    if startswith msg "!vip":
+        if has_permission player "vip.access":
+            if money player >= 500:
+                message player "&aWelcome to VIP Lounge!"
+                teleport player "100,50,200"
+                add_money player -500
+            else:
+                message player "&cYou need $500 to enter VIP Lounge"
+        else:
+            message player "&cYou don't have VIP status!"
+        cancel
+
+# Health reward system
+event player_join(player):
+    if health player >= 80:
+        message player "&aYou have good health! Bonus $50"
+        add_money player 50
+    else:
+        message player "&eRestore your health with !heal command"
+        set_health player 50
+
+# Auto-heal for VIP
+event player_death(player):
+    if has_permission player "vip.autoheal":
+        set_health player 100
+        message player "&e[VIP] &aAutomatic health restoration!"
+    else:
+        message player "&7Buy VIP to get auto-heal after death"
+
+
+# ============================================
+# END OF EXAMPLE
+# ============================================
+
+# This file demonstrates all features available in USkript MVP (v0.1.0):
+#
+# EVENTS:
+# - player_join(player)
+# - player_quit(player)
+# - player_death(player)
+# - player_chat(player, msg)
+# - every(X minutes/seconds/hours)
+#
+# ACTIONS:
+# - message player "text"
+# - broadcast "text"
+# - give player "ItemId" amount
+# - teleport player "location"
+# - add_money player amount
+# - set_money player amount
+# - set_health player amount
+# - kill player
+# - run_command "command"
+# - cancel
+#
+# CONDITIONS:
+# - if equals msg "text"
+# - if startswith msg "text"
+# - if has_permission player "perm"
+# - if money player >= amount
+# - if health player >= amount
+# - else
+#
+# VARIABLES IN TEXT:
+# - {player.name}
+# - {player.id}
+# - {player.displayname}
+#
+# COLORS:
+# - &a (green), &e (yellow), &c (red), &f (white), &7 (gray), etc.

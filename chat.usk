@@ -1,0 +1,20 @@
+# chat.usk - Chat handling scripts
+
+event player_chat(player, msg):
+    if startswith msg "!kit":
+        if has_permission player "vip.kit":
+            give player "MilitaryDrum" 1
+            give player "Colt" 1
+            message player "&aYou received VIP starter kit!"
+        else:
+            message player "&cYou don't have permission for VIP kit!"
+        cancel
+
+    if equals msg "!spawn":
+        teleport player "spawn"
+        message player "&aTeleported to spawn!"
+        cancel
+
+    if startswith msg "!bal":
+        message player "&eAccount balance: &a{player.money}"
+        cancel

@@ -1,0 +1,10 @@
+# join.usk - Scripts executed when player joins
+
+event player_join(player):
+    message player "&aWelcome &e{player.name}"
+    add_money player 100
+
+event player_first_join(player):
+    message player "&eThis is your first time joining!"
+    give player "MapleStrike" 1
+    broadcast "&e{player.name} &fjoined for the first time!"

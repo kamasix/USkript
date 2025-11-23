@@ -1,0 +1,8 @@
+# timers.usk - Periodic events
+
+event every(5 minutes):
+    broadcast "&eEvent: &fSupply drop in the city!"
+    run_command "airdrop"
+
+event every(1 hour):
+    broadcast "&aServer restart in 1 hour!"
