@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>USkript</id>
+    <version>0.1.0</version>
+    <authors>kamasix</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>https://github.com/kamasix/USkript</projectUrl>
+    <description>Simple scripting language for Unturned servers running OpenMod. Create custom server behaviors with Python-like syntax without C# knowledge.</description>
+    <tags>openmod openmod-plugin unturned uskript scripting</tags>
+    <repository type="git" url="https://github.com/kamasix/USkript" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="OpenMod.Unturned" version="3.8.10" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\pc\Documents\USkript\bin\Release\netstandard2.1\USkript.dll" target="lib\netstandard2.1\USkript.dll" />
+  </files>
+</package>

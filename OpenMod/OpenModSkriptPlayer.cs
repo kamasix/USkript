@@ -262,5 +262,68 @@ namespace USkript.OpenMod
                 VehicleManager.forceRemovePlayer(vehicle, _player.channel.owner.playerID.steamID);
             }
         }
+
+        public void SpawnVehicle(string vehicleId)
+        {
+            // Parse vehicle ID
+            if (!ushort.TryParse(vehicleId, out ushort id))
+            {
+                return;
+            }
+
+            // Get player position
+            var position = _player.transform.position + _player.transform.forward * 5f; // 5 meters in front
+            var rotation = _player.transform.rotation;
+
+            // Spawn vehicle
+            VehicleManager.spawnVehicleV2(id, position, rotation);
+        }
+
+        public bool HasItem(string itemId, int amount)
+        {
+            // Parse item ID
+            if (!ushort.TryParse(itemId, out ushort id))
+            {
+                return false;
+            }
+
+            // Count items in inventory
+            int count = 0;
+            var items = _player.inventory.items;
+
+            for (byte page = 0; page < PlayerInventory.PAGES; page++)
+            {
+                var pageItems = items[page];
+                if (pageItems == null) continue;
+
+                for (byte index = 0; index < pageItems.getItemCount(); index++)
+                {
+                    var jar = pageItems.getItem(index);
+                    if (jar != null && jar.item.id == id)
+                    {
+                        count += jar.item.amount;
+                    }
+                }
+            }
+
+            return count >= amount;
+        }
+
+        public void Ban(string reason, uint duration)
+        {
+            // Ban player using Unturned's Provider
+            var steamId = _player.channel.owner.playerID.steamID;
+            var hwids = new byte[0][]; // Empty HWID list
+            
+#pragma warning disable CS0618
+            SDG.Unturned.Provider.requestBanPlayer(
+                Steamworks.CSteamID.Nil, // Admin SteamID (nil = console)
+                steamId,
+                0, // IP (0 = use Steam ID only)
+                reason,
+                duration
+            );
+#pragma warning restore CS0618
+        }
     }
 }

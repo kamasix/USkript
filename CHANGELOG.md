@@ -7,13 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
-- Event `player_first_join`
-- Timer support for `every(X minutes)`
-- Economy integration (requires OpenMod.Economy)
-- Permission checking integration
-- Variables system
-- RocketMod adapter
+### In Progress (v0.2.0)
+- Weather and time control actions
+- Vehicle spawning
+- Item condition checks
+- Ban/unban actions
+
+## [0.2.0] - 2025-11-23
+
+### Added
+- ✅ **All players support in timer events**
+  - `GetAllPlayers()` method in `IEnvironmentAdapter`
+  - Timer events can now iterate over all online players
+  
+- ✅ **Custom variables system**
+  - `set var "name" "value"` - Store custom variables
+  - `{var.name}` - Use variables in text/messages
+  - Variables stored in `SkriptContext.Variables` dictionary
+  - Support for storing any text or player data
+
+- ✅ **Weather and time control**
+  - `set_weather "rain/clear/storm/drizzle"` - Control server weather
+  - `set_time "day/night/dawn/dusk"` - Set time of day
+  - `set_time_cycle "true/false"` - Enable/disable day-night cycle
+
+- ✅ **Vehicle spawning**
+  - `spawn_vehicle player "VehicleID"` - Spawn vehicles near players
+  - Spawns 5 meters in front of player
+  - Supports all Unturned vehicle IDs
+
+- ✅ **Item conditions**
+  - `has_item player "ItemID" amount` - Check inventory for items
+  - Counts items across all inventory pages
+  - Supports both item IDs and amounts
+
+- ✅ **Ban/unban system**
+  - `ban player "reason" duration` - Ban players with reason and duration (seconds)
+  - `unban "SteamID"` - Unban players by Steam ID
+  - `is_banned "SteamID"` - Check if Steam ID is banned
 
 ## [0.1.0-mvp] - 2025-01-XX
 

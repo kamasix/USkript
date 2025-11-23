@@ -29,8 +29,33 @@ namespace USkript.Core.Runtime
         void LogError(string message, Exception? exception = null);
 
         /// <summary>
-        /// Finds player by name or ID
+        /// Gets all online players
         /// </summary>
-        ISkriptPlayer? FindPlayer(string nameOrId);
+        System.Collections.Generic.List<ISkriptPlayer> GetAllPlayers();
+
+        /// <summary>
+        /// Sets weather on the server
+        /// </summary>
+        void SetWeather(string weatherType);
+
+        /// <summary>
+        /// Sets time of day
+        /// </summary>
+        void SetTime(string timeOfDay);
+
+        /// <summary>
+        /// Enables or disables day/night cycle
+        /// </summary>
+        void SetTimeCycle(bool enabled);
+
+        /// <summary>
+        /// Unbans player by Steam ID
+        /// </summary>
+        void UnbanPlayer(string steamId);
+
+        /// <summary>
+        /// Checks if Steam ID is banned
+        /// </summary>
+        bool IsBanned(string steamId);
     }
 }

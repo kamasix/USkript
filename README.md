@@ -146,25 +146,32 @@ give player "ItemId" amount
 - `player_spawned` - player spawns/respawns
 - `every(seconds)` - timer events (time in seconds: every(300) = 5 minutes)
 
-### Actions (25+)
+### Actions (30+)
 Messages: `message`, `broadcast`  
 Items: `give`, `clear_inventory`  
 Health: `heal`, `set_health`, `feed`, `set_food`, `set_water`, `set_stamina`, `set_virus`  
 XP & Rep: `add_experience`, `set_experience`, `set_reputation`  
 Admin: `kick`, `kill`, `teleport`, `exit_vehicle`, `run_command`  
 Economy: `add_money`, `set_money`  
+Variables: `set var "name" "value"`  
+World: `set_weather "rain/clear/storm"`, `set_time "day/night"`, `set_time_cycle "true/false"`  
+Vehicles: `spawn_vehicle player "VehicleID"`  
+Moderation: `ban player "reason" duration`, `unban "SteamID"`  
 Control: `cancel`
 
-### Conditions (11+)
+### Conditions (13+)
 String: `startswith msg`, `equals msg`  
 Permission: `has_permission player`  
 Stats: `health player >=`, `food player <`, `water player >`, `experience player ==`, `reputation player <=`  
 Economy: `money player >=`  
-Vehicle: `is_in_vehicle player`
+Vehicle: `is_in_vehicle player`  
+Items: `has_item player "ItemID" amount`  
+Moderation: `is_banned "SteamID"`
 
 ### Variables (12+)
 Player: `{player.name}`, `{player.id}`, `{player.displayname}`, `{player.health}`, `{player.food}`, `{player.water}`, `{player.experience}`, `{player.reputation}`, `{player.group}`, `{player.position}`, `{player.ping}`  
-Event: `{msg}`, `{damage}`
+Event: `{msg}`, `{damage}`  
+Custom: `{var.name}` - use with `set var "name" "value"`
 
 ## 🏗️ Architecture
 
@@ -203,13 +210,13 @@ USkript consists of three main layers:
 - [x] Hot reload without server restart
 - [x] Complete feature showcase in `scripts/showcase.usk`
 
-### 🚧 v0.2.0 (planned)
-- [ ] All players support in timer events
-- [ ] Custom variables and storage
-- [ ] Weather and time control
-- [ ] Vehicle spawning actions
-- [ ] Item conditions (has_item, etc.)
-- [ ] Ban/unban actions
+### 🚧 v0.2.0 (in progress)
+- [x] All players support in timer events - `GetAllPlayers()`
+- [x] Custom variables - `set var "name" "value"` and `{var.name}`
+- [x] Weather and time control - `set_weather`, `set_time`, `set_time_cycle`
+- [x] Vehicle spawning - `spawn_vehicle player "VehicleID"`
+- [x] Item conditions - `has_item player "ItemID" amount`
+- [x] Ban/unban actions - `ban player "reason" duration`, `unban "SteamID"`, `is_banned "SteamID"`
 
 ### 🔮 v0.3.0 (future)
 - [ ] User-defined functions

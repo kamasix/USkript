@@ -114,6 +114,20 @@ event every(3600):
 # ACTIONS - All available actions
 # =============================================================================
 
+# Variable Actions
+event player_join(player):
+    # Set custom variable
+    set var "welcome_message" "Welcome to our server!"
+    set var "player_count" "10"
+    
+    # Use variable in text with {var.name}
+    message player "{var.welcome_message}"
+    message player "Players online: {var.player_count}"
+    
+    # Variables can store player data
+    set var "last_player" "{player.name}"
+    broadcast "Last player to join: {var.last_player}"
+
 # Message Actions
 event player_join(player):
     # Send message to player
@@ -199,10 +213,52 @@ event player_chat(player):
             # Kick player with reason
             kick player "Breaking server rules"
         cancel
+    
+    if equals msg "/ban":
+        if has_permission player "admin.ban":
+            # Ban player for 3600 seconds (1 hour)
+            ban player "Cheating" 3600
+            message player "&cYou have been banned for 1 hour!"
+        cancel
+
+
+# Moderation Commands (admin only)
+event player_chat(player):
+    if startswith msg "/unban ":
+        if has_permission player "admin.ban":
+            # Extract Steam ID from command: /unban 76561198012345678
+            set var "steamid" "{msg}"
+            # In real scenario, parse the Steam ID properly
+            # unban "76561198012345678"
+            broadcast "&aPlayer unbanned by admin"
+        cancel
+    
+    if startswith msg "/checkban ":
+        if has_permission player "admin.ban":
+            # Check if Steam ID is banned
+            # Example: if is_banned "76561198012345678":
+            #     message player "&cThis player is banned"
+            # else:
+            #     message player "&aThis player is not banned"
+            message player "&7Use: /checkban <SteamID>"
+        cancel
 
 
 # Vehicle Actions
 event player_chat(player):
+    if equals msg "/spawn_car":
+        if has_permission player "vip.vehicle":
+            # Spawn vehicle by ID (spawns 5m in front of player)
+            spawn_vehicle player "51"  # Police Car
+            message player "&aVehicle spawned!"
+        cancel
+    
+    if equals msg "/spawn_heli":
+        if has_permission player "admin.vehicle":
+            spawn_vehicle player "92"  # Huey helicopter
+            message player "&aHelicopter spawned!"
+        cancel
+    
     if equals msg "/exit":
         # Force exit vehicle
         exit_vehicle player
@@ -214,6 +270,39 @@ event every(600):
     # Execute server command
     run_command "save"
     run_command "announce Server is running great!"
+
+
+# Weather & Time Control
+event player_chat(player):
+    if equals msg "/day":
+        if has_permission player "admin.time":
+            set_time "day"
+            broadcast "&eTime set to day!"
+        cancel
+    
+    if equals msg "/night":
+        if has_permission player "admin.time":
+            set_time "night"
+            broadcast "&eTime set to night!"
+        cancel
+    
+    if equals msg "/rain":
+        if has_permission player "admin.weather":
+            set_weather "rain"
+            broadcast "&bIt's raining!"
+        cancel
+    
+    if equals msg "/clear":
+        if has_permission player "admin.weather":
+            set_weather "clear"
+            broadcast "&aWeather cleared!"
+        cancel
+    
+    if equals msg "/cycle":
+        if has_permission player "admin.time":
+            set_time_cycle "true"
+            broadcast "&eTime cycle enabled!"
+        cancel
 
 
 # Event Control
@@ -314,6 +403,28 @@ event every(120):
         message player "&eYou are in a vehicle!"
 
 
+# Item Conditions
+event player_chat(player):
+    if equals msg "/craft":
+        # Check if player has required items
+        if has_item player "15" 10:  # Has 10 Eagles
+            if has_item player "16" 5:  # Has 5 Schofield
+                message player "&aCrafting successful!"
+            else:
+                message player "&cNeed 5 Schofield!"
+        else:
+            message player "&cNeed 10 Eagles!"
+        cancel
+    
+    if equals msg "/vip":
+        # Check for VIP item (e.g., golden badge)
+        if has_item player "1448" 1:
+            message player "&6You are a VIP!"
+        else:
+            message player "&cYou don't have VIP access!"
+        cancel
+
+
 # =============================================================================
 # VARIABLES - All available variables
 # =============================================================================
@@ -339,6 +450,21 @@ event player_chat(player):
 event player_damaged(player):
     # Damage amount variable
     message player "Damage taken: {damage}"
+
+
+# Custom Variables
+event player_join(player):
+    # Store data in custom variables
+    set var "server_name" "My Awesome Server"
+    set var "max_players" "24"
+    
+    # Use custom variables in messages
+    message player "Welcome to {var.server_name}!"
+    message player "Max players: {var.max_players}"
+    
+    # Variables can store player information
+    set var "last_joiner" "{player.name}"
+    set var "join_count" "5"
 
 
 # =============================================================================

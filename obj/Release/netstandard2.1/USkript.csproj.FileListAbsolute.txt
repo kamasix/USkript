@@ -1,0 +1,10 @@
+C:\Users\pc\Documents\USkript\bin\Release\netstandard2.1\USkript.deps.json
+C:\Users\pc\Documents\USkript\bin\Release\netstandard2.1\USkript.dll
+C:\Users\pc\Documents\USkript\bin\Release\netstandard2.1\USkript.pdb
+C:\Users\pc\Documents\USkript\obj\Release\netstandard2.1\USkript.csproj.AssemblyReference.cache
+C:\Users\pc\Documents\USkript\obj\Release\netstandard2.1\USkript.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\pc\Documents\USkript\obj\Release\netstandard2.1\USkript.AssemblyInfoInputs.cache
+C:\Users\pc\Documents\USkript\obj\Release\netstandard2.1\USkript.AssemblyInfo.cs
+C:\Users\pc\Documents\USkript\obj\Release\netstandard2.1\USkript.csproj.CoreCompileInputs.cache
+C:\Users\pc\Documents\USkript\obj\Release\netstandard2.1\USkript.dll
+C:\Users\pc\Documents\USkript\obj\Release\netstandard2.1\USkript.pdb

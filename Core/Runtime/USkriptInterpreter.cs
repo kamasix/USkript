@@ -74,6 +74,19 @@ namespace USkript.Core.Runtime
                     return;
                 }
 
+                // set var "name" "value"
+                if (raw.StartsWith("set var "))
+                {
+                    var match = Regex.Match(raw, @"^set\s+var\s+""(.+?)""\s+""(.+?)""$");
+                    if (match.Success)
+                    {
+                        var varName = match.Groups[1].Value;
+                        var varValue = ProcessString(match.Groups[2].Value, context);
+                        context.Variables[varName] = varValue;
+                    }
+                    return;
+                }
+
                 // message player "tekst"
                 if (raw.StartsWith("message "))
                 {
@@ -317,6 +330,79 @@ namespace USkript.Core.Runtime
                     return;
                 }
 
+                // set_weather "type"
+                if (raw.StartsWith("set_weather "))
+                {
+                    var match = Regex.Match(raw, @"^set_weather\s+""(.+?)""$");
+                    if (match.Success)
+                    {
+                        var weatherType = match.Groups[1].Value;
+                        _environment.SetWeather(weatherType);
+                    }
+                    return;
+                }
+
+                // set_time "time"
+                if (raw.StartsWith("set_time "))
+                {
+                    var match = Regex.Match(raw, @"^set_time\s+""(.+?)""$");
+                    if (match.Success)
+                    {
+                        var timeOfDay = match.Groups[1].Value;
+                        _environment.SetTime(timeOfDay);
+                    }
+                    return;
+                }
+
+                // set_time_cycle "true/false"
+                if (raw.StartsWith("set_time_cycle "))
+                {
+                    var match = Regex.Match(raw, @"^set_time_cycle\s+""(true|false)""$");
+                    if (match.Success)
+                    {
+                        var enabled = bool.Parse(match.Groups[1].Value);
+                        _environment.SetTimeCycle(enabled);
+                    }
+                    return;
+                }
+
+                // spawn_vehicle player "VehicleID"
+                if (raw.StartsWith("spawn_vehicle "))
+                {
+                    var match = Regex.Match(raw, @"^spawn_vehicle\s+(\w+)\s+""(.+?)""$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var vehicleId = match.Groups[2].Value;
+                        context.Player.SpawnVehicle(vehicleId);
+                    }
+                    return;
+                }
+
+                // ban player "reason" duration
+                if (raw.StartsWith("ban "))
+                {
+                    var match = Regex.Match(raw, @"^ban\s+(\w+)\s+""(.+?)""\s+(\d+)$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var reason = ProcessString(match.Groups[2].Value, context);
+                        var duration = uint.Parse(match.Groups[3].Value);
+                        context.Player.Ban(reason, duration);
+                    }
+                    return;
+                }
+
+                // unban "SteamID"
+                if (raw.StartsWith("unban "))
+                {
+                    var match = Regex.Match(raw, @"^unban\s+""(.+?)""$");
+                    if (match.Success)
+                    {
+                        var steamId = match.Groups[1].Value;
+                        _environment.UnbanPlayer(steamId);
+                    }
+                    return;
+                }
+
                 // Unknown action
                 _environment.LogError($"Unknown action at line {actionNode.LineNumber}: {raw}");
             }
@@ -517,6 +603,23 @@ namespace USkript.Core.Runtime
                 return false;
             }
 
+            // has_item player "ItemID" amount
+            var itemMatch = Regex.Match(raw, @"^has_item\s+(\w+)\s+""(.+?)""\s+(\d+)$");
+            if (itemMatch.Success && itemMatch.Groups[1].Value == "player" && context.Player != null)
+            {
+                var itemId = itemMatch.Groups[2].Value;
+                var amount = int.Parse(itemMatch.Groups[3].Value);
+                return context.Player.HasItem(itemId, amount);
+            }
+
+            // is_banned "SteamID"
+            var bannedMatch = Regex.Match(raw, @"^is_banned\s+""(.+?)""$");
+            if (bannedMatch.Success)
+            {
+                var steamId = bannedMatch.Groups[1].Value;
+                return _environment.IsBanned(steamId);
+            }
+
             _environment.LogError($"Unknown condition: {raw}");
             return false;
         }
@@ -549,6 +652,18 @@ namespace USkript.Core.Runtime
             // Event-specific variables
             result = result.Replace("{damage}", context.DamageAmount.ToString("F1"));
             result = result.Replace("{msg}", context.Message ?? "");
+
+            // Custom variables: {var.name}
+            var varMatches = Regex.Matches(result, @"\{var\.([a-zA-Z0-9_]+)\}");
+            foreach (Match match in varMatches)
+            {
+                var varName = match.Groups[1].Value;
+                if (context.Variables.ContainsKey(varName))
+                {
+                    var varValue = context.Variables[varName]?.ToString() ?? "";
+                    result = result.Replace(match.Value, varValue);
+                }
+            }
 
             return result;
         }

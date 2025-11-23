@@ -184,5 +184,20 @@ namespace USkript.Core.Runtime
         /// Removes player from vehicle
         /// </summary>
         void ExitVehicle();
+
+        /// <summary>
+        /// Spawns vehicle near player
+        /// </summary>
+        void SpawnVehicle(string vehicleId);
+
+        /// <summary>
+        /// Checks if player has item in inventory
+        /// </summary>
+        bool HasItem(string itemId, int amount);
+
+        /// <summary>
+        /// Bans player from the server
+        /// </summary>
+        void Ban(string reason, uint duration);
     }
 }
