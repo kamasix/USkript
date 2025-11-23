@@ -37,5 +37,24 @@ namespace USkript.Core.Runtime
         /// Event data (e.g. for "every" - time)
         /// </summary>
         public string? EventData { get; set; }
+
+        /// <summary>
+        /// Damage amount (for player_damaged event)
+        /// </summary>
+        public float DamageAmount
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(EventData) && EventData.StartsWith("damage:"))
+                {
+                    var parts = EventData.Split(':');
+                    if (parts.Length == 2 && float.TryParse(parts[1], out var damage))
+                    {
+                        return damage;
+                    }
+                }
+                return 0;
+            }
+        }
     }
 }

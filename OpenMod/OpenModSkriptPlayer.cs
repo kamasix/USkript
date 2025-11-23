@@ -33,10 +33,9 @@ namespace USkript.OpenMod
 
         public void SendMessage(string message)
         {
-            // Convert colors &a -> <color=#...>
-            var formattedMessage = FormatColors(message);
-            ChatManager.serverSendMessage(formattedMessage, Color.white, null, _player.channel.owner, 
-                EChatMode.SAY, null, useRichTextFormatting: true);
+            // Send message without color formatting
+            ChatManager.serverSendMessage(message, Color.white, null, _player.channel.owner, 
+                EChatMode.SAY, null, useRichTextFormatting: false);
         }
 
         public void GiveItem(string itemId, int amount)
@@ -139,27 +138,129 @@ namespace USkript.OpenMod
                 Steamworks.CSteamID.Nil, out outKill, trackKill: false, ERagdollEffect.NONE);
         }
 
-        private string FormatColors(string message)
+        public byte GetFood()
         {
-            // Convert Minecraft-style colors to Unity Rich Text
-            return message
-                .Replace("&a", "<color=green>")
-                .Replace("&e", "<color=yellow>")
-                .Replace("&c", "<color=red>")
-                .Replace("&f", "<color=white>")
-                .Replace("&0", "<color=black>")
-                .Replace("&1", "<color=blue>")
-                .Replace("&2", "<color=#00AA00>")
-                .Replace("&3", "<color=cyan>")
-                .Replace("&4", "<color=#AA0000>")
-                .Replace("&5", "<color=magenta>")
-                .Replace("&6", "<color=orange>")
-                .Replace("&7", "<color=grey>")
-                .Replace("&8", "<color=#555555>")
-                .Replace("&9", "<color=#5555FF>")
-                .Replace("&b", "<color=#55FFFF>")
-                .Replace("&d", "<color=#FF55FF>")
-                + "</color>";
+            return _player.life.food;
+        }
+
+        public void SetFood(byte food)
+        {
+            _player.life.serverModifyFood(food);
+        }
+
+        public byte GetWater()
+        {
+            return _player.life.water;
+        }
+
+        public void SetWater(byte water)
+        {
+            _player.life.serverModifyWater(water);
+        }
+
+        public byte GetStamina()
+        {
+            return _player.life.stamina;
+        }
+
+        public void SetStamina(byte stamina)
+        {
+            _player.life.serverModifyStamina(stamina);
+        }
+
+        public byte GetVirus()
+        {
+            return _player.life.virus;
+        }
+
+        public void SetVirus(byte virus)
+        {
+            _player.life.serverModifyVirus(virus);
+        }
+
+        public void Kick(string reason)
+        {
+            Provider.kick(_player.channel.owner.playerID.steamID, reason);
+        }
+
+        public string GetGroup()
+        {
+            return _player.channel.owner.playerID.group.ToString();
+        }
+
+        public uint GetExperience()
+        {
+            return _player.skills.experience;
+        }
+
+        public void AddExperience(uint amount)
+        {
+            _player.skills.ServerSetExperience(_player.skills.experience + amount);
+        }
+
+        public void SetExperience(uint amount)
+        {
+            _player.skills.ServerSetExperience(amount);
+        }
+
+        public int GetReputation()
+        {
+            return _player.skills.reputation;
+        }
+
+        public void SetReputation(int reputation)
+        {
+            _player.skills.askRep(reputation);
+        }
+
+        public void Heal()
+        {
+            _player.life.askHeal(100, true, true);
+        }
+
+        public void Feed()
+        {
+            _player.life.serverModifyFood(100);
+            _player.life.serverModifyWater(100);
+        }
+
+        public void ClearInventory()
+        {
+            for (byte page = 0; page < PlayerInventory.PAGES; page++)
+            {
+                if (page == PlayerInventory.AREA) continue; // Skip area (hands)
+                
+                var count = _player.inventory.getItemCount(page);
+                for (byte index = 0; index < count; index++)
+                {
+                    _player.inventory.removeItem(page, 0);
+                }
+            }
+        }
+
+        public string GetPosition()
+        {
+            var pos = _player.transform.position;
+            return $"{pos.x:F1},{pos.y:F1},{pos.z:F1}";
+        }
+
+        public float GetPing()
+        {
+            return _player.channel.owner.ping;
+        }
+
+        public bool IsInVehicle()
+        {
+            return _player.movement.getVehicle() != null;
+        }
+
+        public void ExitVehicle()
+        {
+            var vehicle = _player.movement.getVehicle();
+            if (vehicle != null)
+            {
+                VehicleManager.forceRemovePlayer(vehicle, _player.channel.owner.playerID.steamID);
+            }
         }
     }
 }

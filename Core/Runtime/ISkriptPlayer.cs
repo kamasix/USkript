@@ -74,5 +74,115 @@ namespace USkript.Core.Runtime
         /// Kills player
         /// </summary>
         void Kill();
+
+        /// <summary>
+        /// Gets player's food level
+        /// </summary>
+        byte GetFood();
+
+        /// <summary>
+        /// Sets player's food level
+        /// </summary>
+        void SetFood(byte food);
+
+        /// <summary>
+        /// Gets player's water level
+        /// </summary>
+        byte GetWater();
+
+        /// <summary>
+        /// Sets player's water level
+        /// </summary>
+        void SetWater(byte water);
+
+        /// <summary>
+        /// Gets player's stamina
+        /// </summary>
+        byte GetStamina();
+
+        /// <summary>
+        /// Sets player's stamina
+        /// </summary>
+        void SetStamina(byte stamina);
+
+        /// <summary>
+        /// Gets player's virus level (infection)
+        /// </summary>
+        byte GetVirus();
+
+        /// <summary>
+        /// Sets player's virus level
+        /// </summary>
+        void SetVirus(byte virus);
+
+        /// <summary>
+        /// Kicks player from server
+        /// </summary>
+        void Kick(string reason);
+
+        /// <summary>
+        /// Gets player's group
+        /// </summary>
+        string GetGroup();
+
+        /// <summary>
+        /// Gets player's experience
+        /// </summary>
+        uint GetExperience();
+
+        /// <summary>
+        /// Adds experience to player
+        /// </summary>
+        void AddExperience(uint amount);
+
+        /// <summary>
+        /// Sets player's experience
+        /// </summary>
+        void SetExperience(uint amount);
+
+        /// <summary>
+        /// Gets player's reputation
+        /// </summary>
+        int GetReputation();
+
+        /// <summary>
+        /// Sets player's reputation
+        /// </summary>
+        void SetReputation(int reputation);
+
+        /// <summary>
+        /// Heals player fully
+        /// </summary>
+        void Heal();
+
+        /// <summary>
+        /// Feeds player (max food and water)
+        /// </summary>
+        void Feed();
+
+        /// <summary>
+        /// Clears player's inventory
+        /// </summary>
+        void ClearInventory();
+
+        /// <summary>
+        /// Gets player's position as string
+        /// </summary>
+        string GetPosition();
+
+        /// <summary>
+        /// Gets player's ping
+        /// </summary>
+        float GetPing();
+
+        /// <summary>
+        /// Checks if player is in vehicle
+        /// </summary>
+        bool IsInVehicle();
+
+        /// <summary>
+        /// Removes player from vehicle
+        /// </summary>
+        void ExitVehicle();
     }
 }

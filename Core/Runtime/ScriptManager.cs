@@ -79,6 +79,19 @@ namespace USkript.Core.Runtime
         }
 
         /// <summary>
+        /// Gets all loaded events (all event nodes from all scripts)
+        /// </summary>
+        public List<EventNode> GetAllEvents()
+        {
+            var allEvents = new List<EventNode>();
+            foreach (var script in _loadedScripts)
+            {
+                allEvents.AddRange(script.Events);
+            }
+            return allEvents;
+        }
+
+        /// <summary>
         /// Clears all loaded scripts
         /// </summary>
         public void Clear()

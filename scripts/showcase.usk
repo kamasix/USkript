@@ -1,0 +1,497 @@
+# =============================================================================
+# USkript - Complete Feature Showcase
+# This file demonstrates ALL available features in USkript
+# =============================================================================
+
+# =============================================================================
+# EVENTS - All available event types
+# =============================================================================
+
+# Event: player_join - triggered when player connects to server
+event player_join(player):
+    message player "&a=== Welcome to the server! ==="
+    message player "&bPlayer: &f{player.name} &7(ID: {player.id})"
+    message player "&bGroup: &f{player.group}"
+    message player "&bPosition: &f{player.position}"
+    message player "&bPing: &f{player.ping}ms"
+    
+    # Full heal and feed on join
+    heal player
+    feed player
+    set_virus player 0
+    set_stamina player 100
+    
+    # Give starter kit
+    give player "15" 5
+    give player "Medkit" 3
+    
+    # Add experience and reputation
+    add_experience player 100
+    set_reputation player 10
+    
+    # Broadcast to all players
+    broadcast "&e{player.name} &ajoined the server!"
+
+
+# Event: player_disconnect - triggered when player leaves server
+event player_disconnect(player):
+    broadcast "&7{player.name} &eleft the server"
+
+
+# Event: player_chat - triggered when player sends chat message
+event player_chat(player):
+    # Chat filter
+    if startswith msg "badword":
+        message player "&cWatch your language!"
+        cancel
+    
+    # Admin heal command
+    if equals msg "/heal":
+        if has_permission player "admin.commands":
+            heal player
+            feed player
+            message player "&aYou have been healed!"
+        else:
+            message player "&cNo permission!"
+        cancel
+    
+    # Stats command
+    if equals msg "/stats":
+        message player "&a=== YOUR STATS ==="
+        message player "&cHealth: &f{player.health}/100"
+        message player "&6Food: &f{player.food}/100"
+        message player "&bWater: &f{player.water}/100"
+        message player "&eExperience: &f{player.experience} XP"
+        message player "&dReputation: &f{player.reputation}"
+        cancel
+
+
+# Event: player_death - triggered when player dies
+event player_death(player):
+    broadcast "&c☠ {player.name} &7died!"
+    message player "&cYou died! Respawning soon..."
+
+
+# Event: player_damaged - triggered when player takes damage
+event player_damaged(player):
+    # Show damage taken
+    message player "&7You took &c{damage} &7damage"
+    
+    # Low health warning
+    if health player < 30:
+        message player "&c&l⚠ LOW HEALTH: {player.health} HP"
+        message player "&eFind cover and heal!"
+    
+    # Critical health warning
+    if health player < 10:
+        message player "&4&l☠ CRITICAL! Only {player.health} HP left!"
+
+
+# Event: player_spawned - triggered when player spawns/respawns
+event player_spawned(player):
+    message player "&aYou spawned!"
+    message player "&eHealth: {player.health} &7| &eFood: {player.food} &7| &eWater: {player.water}"
+    
+    # Spawn protection
+    heal player
+    feed player
+
+
+# Event: every - timer events (time in seconds)
+event every(30):
+    broadcast "&7Server running smoothly..."
+
+event every(300):
+    broadcast "&e⚙ Auto-save in progress..."
+    run_command "save"
+
+event every(3600):
+    broadcast "&6&l=== HOURLY REWARD ==="
+    broadcast "&aStay online for rewards!"
+
+
+# =============================================================================
+# ACTIONS - All available actions
+# =============================================================================
+
+# Message Actions
+event player_join(player):
+    # Send message to player
+    message player "&aHello {player.name}!"
+    
+    # Broadcast to all players
+    broadcast "&e{player.name} joined!"
+
+
+# Inventory Actions
+event player_join(player):
+    # Give item by ID or name
+    give player "15" 5          # 5 Eagles (by ID)
+    give player "363" 1         # 1 Maplestrike (by ID)
+    give player "Medkit" 3      # 3 Medkits (by name)
+    
+    # Clear inventory
+    clear_inventory player
+
+
+# Health & Stats Actions
+event player_spawned(player):
+    # Set health (0-100)
+    set_health player 100
+    
+    # Heal to full health
+    heal player
+    
+    # Set food level (0-100)
+    set_food player 100
+    
+    # Set water level (0-100)
+    set_water player 100
+    
+    # Feed (max food and water)
+    feed player
+    
+    # Set stamina (0-100)
+    set_stamina player 100
+    
+    # Set virus/infection (0-100, lower is better)
+    set_virus player 0
+    
+    # Kill player
+    kill player
+
+
+# Experience & Reputation Actions
+event player_join(player):
+    # Add experience
+    add_experience player 500
+    
+    # Set total experience
+    set_experience player 10000
+    
+    # Set reputation (can be negative)
+    set_reputation player 50    # Hero
+    set_reputation player -50   # Bandit
+
+
+# Money Actions (requires economy plugin)
+event player_join(player):
+    # Add money
+    add_money player 100
+    
+    # Set money
+    set_money player 1000
+
+
+# Teleportation Actions
+event player_chat(player):
+    if equals msg "/spawn":
+        # Teleport to coordinates (x,y,z)
+        teleport player "0,10,0"
+        teleport player "100.5,50,200.3"
+        cancel
+
+
+# Administrative Actions
+event player_chat(player):
+    if equals msg "/kick":
+        if has_permission player "admin.kick":
+            # Kick player with reason
+            kick player "Breaking server rules"
+        cancel
+
+
+# Vehicle Actions
+event player_chat(player):
+    if equals msg "/exit":
+        # Force exit vehicle
+        exit_vehicle player
+        cancel
+
+
+# Command Execution
+event every(600):
+    # Execute server command
+    run_command "save"
+    run_command "announce Server is running great!"
+
+
+# Event Control
+event player_chat(player):
+    if startswith msg "spam":
+        message player "&cNo spam!"
+        # Cancel event (prevent chat message)
+        cancel
+
+
+# =============================================================================
+# CONDITIONS - All available conditions
+# =============================================================================
+
+# String Conditions
+event player_chat(player):
+    # Check if message starts with text
+    if startswith msg "/help":
+        message player "&aHelp: Type /stats, /heal, /spawn"
+    
+    # Check if message equals text exactly
+    if equals msg "hello":
+        message player "&aHello to you too!"
+
+
+# Permission Conditions
+event player_chat(player):
+    # Check if player has permission
+    if has_permission player "admin.commands":
+        message player "&aYou are an admin!"
+    else:
+        message player "&cYou are not an admin!"
+
+
+# Health Conditions (operators: >=, <=, >, <, ==)
+event player_damaged(player):
+    if health player < 20:
+        message player "&cLow health!"
+    
+    if health player >= 80:
+        message player "&aHealthy!"
+    
+    if health player == 100:
+        message player "&aFull health!"
+
+
+# Food Conditions
+event every(60):
+    if food player < 30:
+        message player "&eYou are hungry!"
+        set_food player 100
+
+
+# Water Conditions
+event every(60):
+    if water player < 30:
+        message player "&eYou are thirsty!"
+        set_water player 100
+
+
+# Experience Conditions
+event player_join(player):
+    if experience player >= 10000:
+        message player "&6&lVETERAN PLAYER"
+    else:
+        if experience player >= 5000:
+            message player "&a&lEXPERIENCED PLAYER"
+        else:
+            message player "&7New player"
+
+
+# Reputation Conditions
+event player_join(player):
+    if reputation player >= 50:
+        message player "&a&l✓ HERO STATUS"
+    
+    if reputation player <= -50:
+        message player "&c&l✗ BANDIT STATUS"
+    
+    if reputation player == 0:
+        message player "&7Neutral reputation"
+
+
+# Money Conditions
+event player_chat(player):
+    if equals msg "/buy":
+        if money player >= 1000:
+            message player "&aYou can afford this!"
+        else:
+            message player "&cNot enough money!"
+        cancel
+
+
+# Vehicle Conditions
+event every(120):
+    # Check if player is in vehicle
+    if is_in_vehicle player:
+        message player "&eYou are in a vehicle!"
+
+
+# =============================================================================
+# VARIABLES - All available variables
+# =============================================================================
+
+event player_join(player):
+    # Player variables
+    message player "Name: {player.name}"
+    message player "ID: {player.id}"
+    message player "Display Name: {player.displayname}"
+    message player "Health: {player.health}/100"
+    message player "Food: {player.food}/100"
+    message player "Water: {player.water}/100"
+    message player "Experience: {player.experience} XP"
+    message player "Reputation: {player.reputation}"
+    message player "Group: {player.group}"
+    message player "Position: {player.position}"
+    message player "Ping: {player.ping}ms"
+
+event player_chat(player):
+    # Chat message variable
+    message player "You said: {msg}"
+
+event player_damaged(player):
+    # Damage amount variable
+    message player "Damage taken: {damage}"
+
+
+# =============================================================================
+# COLOR CODES - All available colors
+# =============================================================================
+
+event player_join(player):
+    message player "&0Black &1Dark Blue &2Dark Green &3Dark Cyan"
+    message player "&4Dark Red &5Purple &6Orange &7Gray"
+    message player "&8Dark Gray &9Blue &aGreen &bCyan"
+    message player "&cRed &dPink &eYellow &fWhite"
+
+
+# =============================================================================
+# COMPLETE EXAMPLES - Real-world usage
+# =============================================================================
+
+# Example 1: VIP System
+event player_join(player):
+    if has_permission player "vip.rank":
+        broadcast "&6&l[VIP] &f{player.name} &ejoined!"
+        heal player
+        feed player
+        give player "15" 10
+        add_experience player 500
+        message player "&6VIP benefits applied!"
+    else:
+        broadcast "&7{player.name} joined"
+        give player "15" 3
+        add_experience player 100
+
+
+# Example 2: Advanced Chat Commands
+event player_chat(player):
+    # Heal command
+    if equals msg "/heal":
+        if has_permission player "admin.heal":
+            heal player
+            feed player
+            set_virus player 0
+            message player "&a✓ Fully healed!"
+        else:
+            message player "&c✗ No permission!"
+        cancel
+    
+    # Kit command
+    if equals msg "/kit":
+        if has_permission player "kit.starter":
+            give player "15" 5
+            give player "Medkit" 3
+            give player "363" 1
+            message player "&a✓ Starter kit received!"
+        else:
+            message player "&c✗ No permission!"
+        cancel
+    
+    # Spawn command
+    if equals msg "/spawn":
+        teleport player "0,10,0"
+        message player "&a✓ Teleported to spawn!"
+        cancel
+    
+    # Stats command
+    if equals msg "/stats":
+        message player "&a======= YOUR STATS ======="
+        message player "&bName: &f{player.name}"
+        message player "&bPosition: &f{player.position}"
+        message player "&bPing: &f{player.ping}ms"
+        message player "&a=========================="
+        message player "&cHealth: &f{player.health}/100"
+        message player "&6Food: &f{player.food}/100"
+        message player "&bWater: &f{player.water}/100"
+        message player "&a=========================="
+        message player "&eXP: &f{player.experience}"
+        message player "&dRep: &f{player.reputation}"
+        cancel
+
+
+# Example 3: Auto-Heal System
+event player_damaged(player):
+    if health player < 15:
+        message player "&c&lAUTO-HEAL ACTIVATED!"
+        set_health player 50
+        message player "&aHealth restored to 50 HP"
+
+
+# Example 4: Experience Rewards
+event player_join(player):
+    if experience player >= 50000:
+        message player "&6&l★★★ LEGEND ★★★"
+        give player "15" 20
+        set_reputation player 100
+    else:
+        if experience player >= 20000:
+            message player "&b&l★★ VETERAN ★★"
+            give player "15" 10
+            set_reputation player 50
+        else:
+            if experience player >= 5000:
+                message player "&a&l★ EXPERIENCED ★"
+                give player "15" 5
+                set_reputation player 20
+
+
+# Example 5: Anti-AFK Vehicle
+event every(300):
+    if is_in_vehicle player:
+        exit_vehicle player
+        message player "&cRemoved from vehicle (AFK)"
+
+
+# Example 6: Reputation System
+event player_join(player):
+    if reputation player >= 75:
+        message player "&a&l✓ HERO STATUS"
+        message player "&aReputation: {player.reputation}"
+        heal player
+        feed player
+    else:
+        if reputation player <= -75:
+            message player "&c&l✗ BANDIT STATUS"
+            message player "&cReputation: {player.reputation}"
+        else:
+            message player "&7Neutral - Rep: {player.reputation}"
+
+
+# Example 7: Server Maintenance
+event every(30):
+    broadcast "&7Server: OK"
+
+event every(300):
+    broadcast "&e⚙ Auto-saving..."
+    run_command "save"
+
+event every(3600):
+    broadcast "&6&l=== HOURLY MAINTENANCE ==="
+    run_command "save"
+    run_command "sync"
+
+
+# =============================================================================
+# TIPS & NOTES
+# =============================================================================
+
+# 1. Indentation: Use 4 spaces for each level
+# 2. Comments: Use # for single-line comments
+# 3. Colors: Use & followed by 0-9, a-f for colors
+# 4. Variables: Use {variable.property} in strings
+# 5. Operators: >=, <=, >, <, == for comparisons
+# 6. Timer units: time in seconds only (e.g., every(300) = 5 minutes)
+# 7. Cancel: Use 'cancel' to prevent event default behavior
+# 8. Permissions: Check with has_permission before admin actions
+
+# =============================================================================
+# END OF FEATURE SHOWCASE
+# =============================================================================

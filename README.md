@@ -37,67 +37,84 @@ Create a file `scripts/welcome.usk`:
 # welcome.usk - Welcome players on join
 
 event player_join(player):
-    message player "&aWelcome to the server, &e{player.name}&a!"
-    add_money player 100
-    broadcast "&7Player &f{player.name} &7joined the game!"
+    message player "Welcome to the server, {player.name}!"
+    heal player
+    feed player
+    give player "15" 5
+    broadcast "Player {player.name} joined the game!"
 ```
+
+### Complete Feature Showcase
+
+See `scripts/showcase.usk` for a complete reference of **ALL** available features:
+- All 7 event types (player_join, player_chat, player_damaged, etc.)
+- All 25+ actions (heal, teleport, kick, give items, etc.)
+- All 11+ conditions (health checks, permissions, etc.)
+- All 12+ variables ({player.name}, {player.health}, etc.)
+- Real-world examples and use cases
 
 Reload scripts:
 ```
-/usk reload
-```
-
-### Chat Commands
-
-Create a file `scripts/commands.usk`:
-
-```python
-# commands.usk - Simple chat commands
-
-event player_chat(player, msg):
-    if equals msg "!heal":
-        set_health player 100
-        message player "&aYour health has been restored!"
-        cancel
-    
-    if startswith msg "!kit":
-        if has_permission player "vip.kit":
-            give player "MilitaryDrum" 1
-            give player "Colt" 1
-            message player "&aYou received the VIP kit!"
-        else:
-            message player "&cYou don't have permission!"
-        cancel
+/uskript reload
 ```
 
 ## 📖 Language Documentation
 
-### Events (MVP)
+USkript provides a simple Python-like syntax for server scripting.
 
-Events are places where you can run your code:
+### Quick Reference
+
+**Events**: `player_join`, `player_disconnect`, `player_chat`, `player_death`, `player_damaged`, `player_spawned`, `every(seconds)`
+
+**Actions**: `message`, `broadcast`, `give`, `teleport`, `heal`, `feed`, `kick`, `kill`, `add_experience`, `set_health`, `clear_inventory`, and more...
+
+**Conditions**: `has_permission`, `health player >=`, `food player <`, `startswith msg`, `equals msg`, `is_in_vehicle player`, etc.
+
+**Variables**: `{player.name}`, `{player.health}`, `{player.experience}`, `{player.position}`, `{damage}`, `{msg}`, etc.
+- All 7 event types with examples
+- All 25+ actions with syntax
+- All 11+ conditions with operators
+- All 12+ variables
+- Color code reference
+- Real-world complete examples
+
+### Example - VIP Welcome System
 
 ```python
 event player_join(player):
-    # Executed when a player joins the server
-    
-event player_quit(player):
-    # Executed when a player leaves the server
-    
-event player_chat(player, msg):
-    # Executed when a player writes in chat
-    
-event player_death(player):
-    # Executed when a player dies
-    
-event every(5 minutes):
-    # Executed every 5 minutes (supports: seconds, minutes, hours)
+    if has_permission player "vip.rank":
+        broadcast "&6&l[VIP] &f{player.name} &ejoined!"
+        heal player
+        feed player
+        give player "15" 10
+        add_experience player 500
+        message player "&6VIP benefits applied!"
+    else:
+        broadcast "&7{player.name} joined"
+        give player "15" 3
+        add_experience player 100
 ```
 
-### Actions (MVP)
+### Example - Admin Commands
 
-Actions are things you can do in scripts:
-
-#### Messages
+```python
+event player_chat(player):
+    if equals msg "/heal":
+        if has_permission player "admin.commands":
+            heal player
+            feed player
+            message player "&aYou have been healed!"
+        else:
+            message player "&cNo permission!"
+        cancel
+    
+    if equals msg "/stats":
+        message player "&a=== YOUR STATS ==="
+        message player "&cHealth: &f{player.health}/100"
+        message player "&eXP: &f{player.experience}"
+        message player "&dRep: &f{player.reputation}"
+        cancel
+```
 ```python
 message player "Message text"
 broadcast "Global text"
@@ -110,130 +127,44 @@ give player "ItemId" amount
 ```
 
 #### Teleportation
-```python
-teleport player "spawn"
-# Or coordinates: teleport player "0,10,0"
-```
-
-#### Economy
-```python
-add_money player 100
-set_money player 1000
-```
-
-#### Health
-```python
-set_health player 100
-kill player
-```
-
-#### Commands and control
-```python
-run_command "airdrop"
-cancel  # Cancels the event (e.g., blocks a chat message)
-```
-
-### Conditions
-
-```python
-# Text checking
-if equals msg "!spawn":
-    # code
-    
-if startswith msg "!kit":
-    # code
-
-# Permission checking
-if has_permission player "vip.access":
-    # code
-
-# Money checking
-if money player >= 1000:
-    # code
-
-# Health checking
-if health player < 50:
-    # code
-    
-# Else
-if money player >= 100:
-    message player "You have a lot of money!"
-else:
-    message player "You're poor!"
-```
-
-### Variables in text
-
-```python
-message player "Welcome {player.name}!"
-message player "Your ID: {player.id}"
-broadcast "{player.displayname} joined!"
-```
-
-### Colors
-
-Use Minecraft color codes:
-
-```python
-message player "&aGreen &eyellow &cred &fwhite"
-```
-
-Color codes:
-- `&a` - green
-- `&e` - yellow
-- `&c` - red
-- `&f` - white
-- `&0` - black
-- `&1` - blue
-- `&2` - dark green
-- etc.
-
-## 📁 Examples
-
-### Economy System
-```python
-# economy.usk
-
-event player_join(player):
-    add_money player 50
-    
-event player_chat(player, msg):
-    if equals msg "!bal":
-        message player "&eAccount balance: &a{player.money}"
-        cancel
-```
-
-### Auto-Announce
-```python
-# announcements.usk
-
-event every(10 minutes):
-    broadcast "&e[Info] &fJoin our Discord!"
-    
-event every(30 minutes):
-    broadcast "&e[Info] &fRemember to save your progress!"
-```
-
-### Kit System
-```python
-# kits.usk
-
-event player_chat(player, msg):
-    if equals msg "!kit starter":
-        give player "Eaglefire" 1
-        give player "MilitaryDrum" 3
-        give player "Medkit" 5
-        message player "&aYou received the starter kit!"
-        cancel
-```
-
 ## 🛠️ Commands
 
 | Command | Alias | Description |
 |---------|-------|-------------|
 | `/uskript` | `/usk` | Main command - displays help |
-| `/usk reload` | `/usk rl` | Reloads all scripts |
-| `/usk info` | - | Shows loaded scripts statistics |
+| `/uskript reload` | `/usk reload` | Reloads all scripts |
+| `/uskript info` | `/usk info` | Shows loaded scripts statistics |
+
+## 🎨 Features
+
+### Events (7 types)
+- `player_join` - player connects
+- `player_disconnect` - player leaves
+- `player_chat` - player sends message
+- `player_death` - player dies
+- `player_damaged` - player takes damage
+- `player_spawned` - player spawns/respawns
+- `every(seconds)` - timer events (time in seconds: every(300) = 5 minutes)
+
+### Actions (25+)
+Messages: `message`, `broadcast`  
+Items: `give`, `clear_inventory`  
+Health: `heal`, `set_health`, `feed`, `set_food`, `set_water`, `set_stamina`, `set_virus`  
+XP & Rep: `add_experience`, `set_experience`, `set_reputation`  
+Admin: `kick`, `kill`, `teleport`, `exit_vehicle`, `run_command`  
+Economy: `add_money`, `set_money`  
+Control: `cancel`
+
+### Conditions (11+)
+String: `startswith msg`, `equals msg`  
+Permission: `has_permission player`  
+Stats: `health player >=`, `food player <`, `water player >`, `experience player ==`, `reputation player <=`  
+Economy: `money player >=`  
+Vehicle: `is_in_vehicle player`
+
+### Variables (12+)
+Player: `{player.name}`, `{player.id}`, `{player.displayname}`, `{player.health}`, `{player.food}`, `{player.water}`, `{player.experience}`, `{player.reputation}`, `{player.group}`, `{player.position}`, `{player.ping}`  
+Event: `{msg}`, `{damage}`
 
 ## 🏗️ Architecture
 
@@ -261,31 +192,37 @@ USkript consists of three main layers:
 
 ## 📊 Roadmap
 
-### ✅ MVP (v0.1.0) - COMPLETED
-- [x] `.usk` parser
-- [x] Basic events (join, chat, death)
-- [x] Basic actions (message, broadcast, give, teleport)
-- [x] Conditions (if/else)
-- [x] `/usk reload` command
+### ✅ v0.1.0 - COMPLETED
+- [x] `.usk` parser with Python-like syntax
+- [x] 7 event types (join, disconnect, chat, death, damaged, spawned, timers)
+- [x] 25+ actions (heal, teleport, kick, give, experience, etc.)
+- [x] 11+ conditions (permissions, health checks, comparisons)
+- [x] 12+ variables ({player.name}, {player.health}, etc.)
+- [x] Timer system (every X seconds/minutes/hours)
+- [x] `/uskript reload` command
+- [x] Hot reload without server restart
+- [x] Complete feature showcase in `scripts/showcase.usk`
 
-### 🚧 V1 (planned)
-- [ ] `player_first_join` event
-- [ ] `every(X minutes)` timers
-- [ ] Economy actions (integration with OpenMod.Economy)
-- [ ] Permission actions (has_permission)
-- [ ] More conditions (>, <, >=, <=, ==)
+### 🚧 v0.2.0 (planned)
+- [ ] All players support in timer events
+- [ ] Custom variables and storage
+- [ ] Weather and time control
+- [ ] Vehicle spawning actions
+- [ ] Item conditions (has_item, etc.)
+- [ ] Ban/unban actions
 
-### 🔮 V2 (future)
-- [ ] Variables (`set var`, `get var`)
-- [ ] Simple storage (JSON/YAML)
-- [ ] Addon system (register custom actions)
+### 🔮 v0.3.0 (future)
+- [ ] User-defined functions
+- [ ] Lists and foreach loops
+- [ ] File-based storage (JSON/YAML)
+- [ ] Warp system integration
+- [ ] NPC interaction events
+
+### 🌟 v1.0+ (long-term)
+- [ ] Debugging tools and traces
+- [ ] Visual script editor
 - [ ] RocketMod adapter
-
-### 🌟 V3+ (long-term plans)
-- [ ] User functions
-- [ ] Lists and loops
-- [ ] Debugging/trace
-- [ ] GUI editor
+- [ ] Plugin API for custom actions
 
 ## 🤝 Contribution
 

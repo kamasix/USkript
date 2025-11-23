@@ -27,15 +27,14 @@ namespace USkript.OpenMod
 
         public void Broadcast(string message)
         {
-            var formattedMessage = FormatColors(message);
             SDG.Unturned.ChatManager.serverSendMessage(
-                formattedMessage, 
+                message, 
                 UnityEngine.Color.white, 
                 null, 
                 null, 
                 SDG.Unturned.EChatMode.SAY, 
                 null, 
-                useRichTextFormatting: true);
+                useRichTextFormatting: false);
         }
 
         public async Task RunCommand(string command)
@@ -99,28 +98,6 @@ namespace USkript.OpenMod
             }
 
             return null;
-        }
-
-        private string FormatColors(string message)
-        {
-            return message
-                .Replace("&a", "<color=green>")
-                .Replace("&e", "<color=yellow>")
-                .Replace("&c", "<color=red>")
-                .Replace("&f", "<color=white>")
-                .Replace("&0", "<color=black>")
-                .Replace("&1", "<color=blue>")
-                .Replace("&2", "<color=#00AA00>")
-                .Replace("&3", "<color=cyan>")
-                .Replace("&4", "<color=#AA0000>")
-                .Replace("&5", "<color=magenta>")
-                .Replace("&6", "<color=orange>")
-                .Replace("&7", "<color=grey>")
-                .Replace("&8", "<color=#555555>")
-                .Replace("&9", "<color=#5555FF>")
-                .Replace("&b", "<color=#55FFFF>")
-                .Replace("&d", "<color=#FF55FF>")
-                + "</color>";
         }
     }
 }

@@ -137,10 +137,10 @@ namespace USkript.Core.Parsing
             var paramsStr = match.Groups[2].Value.Trim();
             if (!string.IsNullOrEmpty(paramsStr))
             {
-                // Special case for every(5 minutes)
+                // Special case for every(300) - time in seconds
                 if (eventNode.EventName == "every")
                 {
-                    eventNode.EventData = paramsStr; // "5 minutes", "30 seconds"
+                    eventNode.EventData = paramsStr; // "300", "60", "3600"
                 }
                 else
                 {

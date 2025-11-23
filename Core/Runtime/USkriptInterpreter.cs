@@ -169,6 +169,142 @@ namespace USkript.Core.Runtime
                     return;
                 }
 
+                // set_food player amount
+                if (raw.StartsWith("set_food "))
+                {
+                    var match = Regex.Match(raw, @"^set_food\s+(\w+)\s+(\d+)$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var food = byte.Parse(match.Groups[2].Value);
+                        context.Player.SetFood(food);
+                    }
+                    return;
+                }
+
+                // set_water player amount
+                if (raw.StartsWith("set_water "))
+                {
+                    var match = Regex.Match(raw, @"^set_water\s+(\w+)\s+(\d+)$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var water = byte.Parse(match.Groups[2].Value);
+                        context.Player.SetWater(water);
+                    }
+                    return;
+                }
+
+                // set_stamina player amount
+                if (raw.StartsWith("set_stamina "))
+                {
+                    var match = Regex.Match(raw, @"^set_stamina\s+(\w+)\s+(\d+)$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var stamina = byte.Parse(match.Groups[2].Value);
+                        context.Player.SetStamina(stamina);
+                    }
+                    return;
+                }
+
+                // set_virus player amount
+                if (raw.StartsWith("set_virus "))
+                {
+                    var match = Regex.Match(raw, @"^set_virus\s+(\w+)\s+(\d+)$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var virus = byte.Parse(match.Groups[2].Value);
+                        context.Player.SetVirus(virus);
+                    }
+                    return;
+                }
+
+                // kick player "reason"
+                if (raw.StartsWith("kick "))
+                {
+                    var match = Regex.Match(raw, @"^kick\s+(\w+)\s+""(.+?)""$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var reason = ProcessString(match.Groups[2].Value, context);
+                        context.Player.Kick(reason);
+                    }
+                    return;
+                }
+
+                // add_experience player amount
+                if (raw.StartsWith("add_experience "))
+                {
+                    var match = Regex.Match(raw, @"^add_experience\s+(\w+)\s+(\d+)$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var amount = uint.Parse(match.Groups[2].Value);
+                        context.Player.AddExperience(amount);
+                    }
+                    return;
+                }
+
+                // set_experience player amount
+                if (raw.StartsWith("set_experience "))
+                {
+                    var match = Regex.Match(raw, @"^set_experience\s+(\w+)\s+(\d+)$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var amount = uint.Parse(match.Groups[2].Value);
+                        context.Player.SetExperience(amount);
+                    }
+                    return;
+                }
+
+                // set_reputation player amount
+                if (raw.StartsWith("set_reputation "))
+                {
+                    var match = Regex.Match(raw, @"^set_reputation\s+(\w+)\s+(-?\d+)$");
+                    if (match.Success && match.Groups[1].Value == "player" && context.Player != null)
+                    {
+                        var reputation = int.Parse(match.Groups[2].Value);
+                        context.Player.SetReputation(reputation);
+                    }
+                    return;
+                }
+
+                // heal player
+                if (raw == "heal player")
+                {
+                    if (context.Player != null)
+                    {
+                        context.Player.Heal();
+                    }
+                    return;
+                }
+
+                // feed player
+                if (raw == "feed player")
+                {
+                    if (context.Player != null)
+                    {
+                        context.Player.Feed();
+                    }
+                    return;
+                }
+
+                // clear_inventory player
+                if (raw == "clear_inventory player")
+                {
+                    if (context.Player != null)
+                    {
+                        context.Player.ClearInventory();
+                    }
+                    return;
+                }
+
+                // exit_vehicle player
+                if (raw == "exit_vehicle player")
+                {
+                    if (context.Player != null)
+                    {
+                        context.Player.ExitVehicle();
+                    }
+                    return;
+                }
+
                 // run_command "command"
                 if (raw.StartsWith("run_command "))
                 {
@@ -295,6 +431,92 @@ namespace USkript.Core.Runtime
                 };
             }
 
+            // food player >= amount
+            var foodMatch = Regex.Match(raw, @"^food\s+(\w+)\s+(>=|<=|>|<|==)\s+(\d+)$");
+            if (foodMatch.Success && foodMatch.Groups[1].Value == "player" && context.Player != null)
+            {
+                var op = foodMatch.Groups[2].Value;
+                var amount = byte.Parse(foodMatch.Groups[3].Value);
+                var playerFood = context.Player.GetFood();
+
+                return op switch
+                {
+                    ">=" => playerFood >= amount,
+                    "<=" => playerFood <= amount,
+                    ">" => playerFood > amount,
+                    "<" => playerFood < amount,
+                    "==" => playerFood == amount,
+                    _ => false
+                };
+            }
+
+            // water player >= amount
+            var waterMatch = Regex.Match(raw, @"^water\s+(\w+)\s+(>=|<=|>|<|==)\s+(\d+)$");
+            if (waterMatch.Success && waterMatch.Groups[1].Value == "player" && context.Player != null)
+            {
+                var op = waterMatch.Groups[2].Value;
+                var amount = byte.Parse(waterMatch.Groups[3].Value);
+                var playerWater = context.Player.GetWater();
+
+                return op switch
+                {
+                    ">=" => playerWater >= amount,
+                    "<=" => playerWater <= amount,
+                    ">" => playerWater > amount,
+                    "<" => playerWater < amount,
+                    "==" => playerWater == amount,
+                    _ => false
+                };
+            }
+
+            // experience player >= amount
+            var expMatch = Regex.Match(raw, @"^experience\s+(\w+)\s+(>=|<=|>|<|==)\s+(\d+)$");
+            if (expMatch.Success && expMatch.Groups[1].Value == "player" && context.Player != null)
+            {
+                var op = expMatch.Groups[2].Value;
+                var amount = uint.Parse(expMatch.Groups[3].Value);
+                var playerExp = context.Player.GetExperience();
+
+                return op switch
+                {
+                    ">=" => playerExp >= amount,
+                    "<=" => playerExp <= amount,
+                    ">" => playerExp > amount,
+                    "<" => playerExp < amount,
+                    "==" => playerExp == amount,
+                    _ => false
+                };
+            }
+
+            // reputation player >= amount
+            var repMatch = Regex.Match(raw, @"^reputation\s+(\w+)\s+(>=|<=|>|<|==)\s+(-?\d+)$");
+            if (repMatch.Success && repMatch.Groups[1].Value == "player" && context.Player != null)
+            {
+                var op = repMatch.Groups[2].Value;
+                var amount = int.Parse(repMatch.Groups[3].Value);
+                var playerRep = context.Player.GetReputation();
+
+                return op switch
+                {
+                    ">=" => playerRep >= amount,
+                    "<=" => playerRep <= amount,
+                    ">" => playerRep > amount,
+                    "<" => playerRep < amount,
+                    "==" => playerRep == amount,
+                    _ => false
+                };
+            }
+
+            // is_in_vehicle player
+            if (raw == "is_in_vehicle player")
+            {
+                if (context.Player != null)
+                {
+                    return context.Player.IsInVehicle();
+                }
+                return false;
+            }
+
             _environment.LogError($"Unknown condition: {raw}");
             return false;
         }
@@ -308,13 +530,25 @@ namespace USkript.Core.Runtime
 
             // OpenMod/Rocket colors: &a, &e, &f etc. - leave as is
             
-            // Variables: {player.name}, {player.id}
+            // Variables: {player.name}, {player.id}, etc.
             if (context.Player != null)
             {
                 result = result.Replace("{player.name}", context.Player.Name);
                 result = result.Replace("{player.id}", context.Player.Id);
                 result = result.Replace("{player.displayname}", context.Player.DisplayName);
+                result = result.Replace("{player.health}", context.Player.GetHealth().ToString());
+                result = result.Replace("{player.food}", context.Player.GetFood().ToString());
+                result = result.Replace("{player.water}", context.Player.GetWater().ToString());
+                result = result.Replace("{player.experience}", context.Player.GetExperience().ToString());
+                result = result.Replace("{player.reputation}", context.Player.GetReputation().ToString());
+                result = result.Replace("{player.group}", context.Player.GetGroup());
+                result = result.Replace("{player.position}", context.Player.GetPosition());
+                result = result.Replace("{player.ping}", context.Player.GetPing().ToString("F0"));
             }
+
+            // Event-specific variables
+            result = result.Replace("{damage}", context.DamageAmount.ToString("F1"));
+            result = result.Replace("{msg}", context.Message ?? "");
 
             return result;
         }
