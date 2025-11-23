@@ -197,40 +197,6 @@ USkript consists of three main layers:
 - Event subscriptions (`player_join`, `player_chat`, `player_death`)
 - Integration with OpenMod DI
 
-## 📊 Roadmap
-
-### ✅ v0.1.0 - COMPLETED
-- [x] `.usk` parser with Python-like syntax
-- [x] 7 event types (join, disconnect, chat, death, damaged, spawned, timers)
-- [x] 25+ actions (heal, teleport, kick, give, experience, etc.)
-- [x] 11+ conditions (permissions, health checks, comparisons)
-- [x] 12+ variables ({player.name}, {player.health}, etc.)
-- [x] Timer system (every X seconds/minutes/hours)
-- [x] `/uskript reload` command
-- [x] Hot reload without server restart
-- [x] Complete feature showcase in `scripts/showcase.usk`
-
-### 🚧 v0.2.0 (in progress)
-- [x] All players support in timer events - `GetAllPlayers()`
-- [x] Custom variables - `set var "name" "value"` and `{var.name}`
-- [x] Weather and time control - `set_weather`, `set_time`, `set_time_cycle`
-- [x] Vehicle spawning - `spawn_vehicle player "VehicleID"`
-- [x] Item conditions - `has_item player "ItemID" amount`
-- [x] Ban/unban actions - `ban player "reason" duration`, `unban "SteamID"`, `is_banned "SteamID"`
-
-### 🔮 v0.3.0 (future)
-- [ ] User-defined functions
-- [ ] Lists and foreach loops
-- [ ] File-based storage (JSON/YAML)
-- [ ] Warp system integration
-- [ ] NPC interaction events
-
-### 🌟 v1.0+ (long-term)
-- [ ] Debugging tools and traces
-- [ ] Visual script editor
-- [ ] RocketMod adapter
-- [ ] Plugin API for custom actions
-
 ## 🤝 Contribution
 
 The project is open to community contributions! If you want to help:
